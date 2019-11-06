@@ -29,24 +29,24 @@ describe('ExperimentService', () => {
     // Test cases
     // -------------------------------------------------------------------------
 
-    test('should create a new experiment in the database', async (done) => {
-        const experiment = new Experiment();
-        experiment.id = 'xxxxxxxx-xxxx-Mxxx-Nxxx-xxxxxxxxxxxx';
-        experiment.name = 'test-experiment';
-        experiment.state = EXPERIMENT_STATE.INACTIVE;
-        experiment.consistencyRule = CONSISTENCY_RULE.EXPERIMENT;
-        experiment.assignmentUnit = ASSIGNMENT_UNIT.GROUP;
-        experiment.postExperimentRule = POST_EXPERIMENT_RULE.REVERT_TO_DEFAULT;
+    test('should get a new experiment in the database with given ID', async (done) => {
+        // const experiment = new Experiment();
+        // experiment.id = 'ea6497f1-f7b8-4ec7-8ab3-d85af06aa634';
+        // experiment.name = 'Test Experiment';
+        // experiment.state = EXPERIMENT_STATE.INACTIVE;
+        // experiment.consistencyRule = CONSISTENCY_RULE.INDIVIDUAL;
+        // experiment.assignmentUnit = ASSIGNMENT_UNIT.INDIVIDUAL;
+        // experiment.postExperimentRule = POST_EXPERIMENT_RULE.CONTINUE;
 
         const service = Container.get<ExperimentService>(ExperimentService);
-        const resultCreate = await service.create(experiment);
-        expect(resultCreate.name).toBe(experiment.name);
-        expect(resultCreate.state).toBe(experiment.state);
+        // const resultCreate = await service.create(experiment);
+        // expect(resultCreate.name).toBe(experiment.name);
+        // expect(resultCreate.state).toBe(experiment.state);
 
-        const resultFind = await service.findOne(resultCreate.id);
+        const resultFind = await service.findOne('ea6497f1-f7b8-4ec7-8ab3-d85af06aa634');
         if (resultFind) {
-            expect(resultFind.name).toBe(experiment.name);
-            expect(resultFind.state).toBe(experiment.state);
+            expect(resultFind.name).toBe('Test Experiment');
+            expect(resultFind.state).toBe('inactive');
         } else {
             fail('Could not find experiment');
         }
