@@ -26,7 +26,7 @@ export class ExperimentRepository extends Repository<Experiment> {
       });
   }
 
-  public async getValidExperiments(context: string | undefined): Promise<Experiment[]> {
+  public async getValidExperiments(context: string[] | undefined): Promise<Experiment[]> {
     let query = this.createQueryBuilder('experiment')
       .leftJoinAndSelect('experiment.partitions', 'partitions')
       .leftJoinAndSelect('experiment.conditions', 'conditions')
@@ -40,8 +40,8 @@ export class ExperimentRepository extends Repository<Experiment> {
       );
 
     // add context query here
-    if (context) {
-      query = query.andWhere('experiment.context = :context', { context });
+    if (context.length) {
+      query = query.andWhere('experiment.context IN (:...context)', { context });
     }
 
     return query.getMany().catch((errorMsg: any) => {
@@ -50,7 +50,7 @@ export class ExperimentRepository extends Repository<Experiment> {
     });
   }
 
-  public async getValidExperimentsWithPreview(context: string | undefined): Promise<Experiment[]> {
+  public async getValidExperimentsWithPreview(context: string[] | undefined): Promise<Experiment[]> {
     let query = this.createQueryBuilder('experiment')
       .leftJoinAndSelect('experiment.partitions', 'partitions')
       .leftJoinAndSelect('experiment.conditions', 'conditions')
@@ -68,8 +68,8 @@ export class ExperimentRepository extends Repository<Experiment> {
       );
 
     // add context query here
-    if (context) {
-      query = query.andWhere('experiment.context = :context', { context });
+    if (context.length) {
+      query = query.andWhere('experiment.context IN (:...context)', { context });
     }
 
     return query.getMany().catch((errorMsg: any) => {

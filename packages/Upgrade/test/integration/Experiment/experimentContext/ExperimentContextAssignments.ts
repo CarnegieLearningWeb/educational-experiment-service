@@ -20,8 +20,8 @@ export default async function testCase(): Promise<void> {
 
   // creating new user
   const user = await userService.create(systemUser as any);
-  const context1 = 'login';
-  const context2 = 'about';
+  const context1 = ['login'];
+  const context2 = ['about'];
 
   // experiment object
   const experimentObject1 = individualAssignmentExperiment;
