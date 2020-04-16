@@ -1,6 +1,6 @@
-resource "aws_sfn_state_machine" "ExperimentSchedular-development" {
-  name     = "experimentSchedular-development"
-  role_arn = aws_iam_role.iam_for_sfn.arn
+resource "aws_sfn_state_machine" "upgrade-experimentSchedular-development" {
+  name     = "upgrade-experimentSchedular-development"
+  role_arn = aws_iam_role.upgrade-iam_for_sfn.arn
 
   definition = <<EOF
   {
@@ -14,7 +14,7 @@ resource "aws_sfn_state_machine" "ExperimentSchedular-development" {
     },
     "FinalState": {
       "Type": "Task",
-      "Resource": "${aws_lambda_function.schedular.arn}",
+      "Resource": "${aws_lambda_function.upgrade-schedular.arn}",
       "End": true
     }
   }

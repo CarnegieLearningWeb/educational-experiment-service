@@ -1,11 +1,11 @@
-resource "aws_elastic_beanstalk_application" "app" {
-  name        = "app"
+resource "aws_elastic_beanstalk_application" "upgrade-app" {
+  name        = "upgrade-app"
   description = "app"
 }
 
-resource "aws_elastic_beanstalk_environment" "app-prod" {
-  name                = "app-prod"
-  application         = aws_elastic_beanstalk_application.app.name
+resource "aws_elastic_beanstalk_environment" "upgrade-app-prod" {
+  name                = "upgrade-app-prod"
+  application         = aws_elastic_beanstalk_application.upgrade-app.name
   solution_stack_name = "64bit Amazon Linux 2018.03 v2.14.3 running Docker 18.09.9-ce"
   setting {
     namespace = "aws:ec2:vpc"
@@ -25,7 +25,7 @@ resource "aws_elastic_beanstalk_environment" "app-prod" {
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "IamInstanceProfile"
-    value     = aws_iam_instance_profile.app-ec2-role.name
+    value     = aws_iam_instance_profile.upgrade-app-ec2-role.name
   }
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
@@ -45,7 +45,7 @@ resource "aws_elastic_beanstalk_environment" "app-prod" {
   setting {
     namespace = "aws:elasticbeanstalk:environment"
     name      = "ServiceRole"
-    value     = aws_iam_role.elasticbeanstalk-service-role.name
+    value     = aws_iam_role.upgrade-elasticbeanstalk-service-role.name
   }
   setting {
     namespace = "aws:ec2:vpc"
@@ -90,211 +90,211 @@ resource "aws_elastic_beanstalk_environment" "app-prod" {
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "RDS_USERNAME"
-    value     = aws_db_instance.postgres.username
+    value     = aws_db_instance.upgrade-postgres.username
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "RDS_PASSWORD"
-    value     = aws_db_instance.postgres.password
+    value     = aws_db_instance.upgrade-postgres.password
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "RDS_DB_NAME"
-    value     = aws_db_instance.postgres.name
+    value     = aws_db_instance.upgrade-postgres.name
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "RDS_HOSTNAME"
-    value     = split( ":", aws_db_instance.postgres.endpoint)[0]
+    value     = split( ":", aws_db_instance.upgrade-postgres.endpoint)[0]
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "RDS_PORT"
-    value     = split( ":", aws_db_instance.postgres.endpoint)[1]
+    value     = split( ":", aws_db_instance.upgrade-postgres.endpoint)[1]
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "APP_BANNER"
-    value     = true
+    value     = var.APP_BANNER
   }
 setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      ="APP_HOST" 
-    value = "localhost"
+    name      = "APP_HOST" 
+    value     = var.APP_HOST
     }
 setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      ="APP_NAME" 
-    value = "A/B Testing Backend"
+    name      = "APP_NAME" 
+    value     = var.APP_NAME
     }
 setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      ="APP_PORT" 
-    value = 3030
+    name      = "APP_PORT" 
+    value     = var.APP_PORT
     }
 setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      ="APP_ROUTE_PREFIX" 
-    value = "/api"
+    name      = "APP_ROUTE_PREFIX" 
+    value     = var.APP_ROUTE_PREFIX
     }
 setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      ="APP_SCHEMA" 
-    value = "http"
+    name      = "APP_SCHEMA" 
+    value     = var.APP_SCHEMA
     }
 setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      ="AUTH_CHECK" 
-    value = false
+    name      = "AUTH_CHECK" 
+    value     = var.AUTH_CHECK
     }
 setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      ="AWS_REGION" 
-    value = "eu-west-1"
+    name      = "AWS_REGION" 
+    value     = var.AWS_REGION
     }
 setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      ="CONTROLLERS" 
-    value = "src/api/controllers/**/*Controller.ts"
+    name      = "CONTROLLERS" 
+    value     = var.CONTROLLERS
     }
 setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      ="GOOGLE_CLIENT_ID" 
-    value = "135765367152-pq4jhd3gra10jda9l6bpnmu9gqt48tup.apps.googleusercontent.com"
+    name      = "GOOGLE_CLIENT_ID" 
+    value     = var.GOOGLE_CLIENT_ID
     }
 setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      ="HOST_URL" 
-    value = "http://upgrade-development.us-east-1.elasticbeanstalk.com/api"
+    name      = "HOST_URL" 
+    value     = var.HOST_URL
     }
 setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      ="INTERCEPTORS" 
-    value = "src/api/interceptors/**/*Interceptor.ts"
+    name      = "INTERCEPTORS" 
+    value     = var.INTERCEPTORS
     }
 setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      ="LOG_LEVEL" 
-    value = "debug"
+    name      = "LOG_LEVEL" 
+    value     = var.LOG_LEVEL
     }
 setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      ="LOG_OUTPUT" 
-    value = "dev"
+    name      = "LOG_OUTPUT" 
+    value     = var.LOG_OUTPUT
     }
 setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      ="MIDDLEWARES" 
-    value = "src/api/middlewares/**/*Middleware.ts"
+    name      = "MIDDLEWARES" 
+    value     = var.MIDDLEWARES
     }
 setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      ="MONITOR_ENABLED" 
-    value = true
+    name      = "MONITOR_ENABLED" 
+    value     = var.MONITOR_ENABLED
     }
 setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      ="MONITOR_PASSWORD" 
-    value = 1234
+    name      = "MONITOR_PASSWORD" 
+    value     = var.MONITOR_PASSWORD
     }
 setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      ="MONITOR_ROUTE" 
-    value = "/monitor"
+    name      = "MONITOR_ROUTE" 
+    value     = var.MONITOR_ROUTE
     }
 setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      ="MONITOR_USERNAME" 
-    value = "admin"
+    name      = "MONITOR_USERNAME" 
+    value     = var.MONITOR_USERNAME
     }
 setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      ="SCHEDULER_STEP_FUNCTION" 
-    value = aws_sfn_state_machine.ExperimentSchedular-development.id
+    name      = "SCHEDULER_STEP_FUNCTION" 
+    value = aws_sfn_state_machine.upgrade-experimentSchedular-development.id
     }
 setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      ="SWAGGER_API" 
-    value = "src/api/controllers/*.ts"
+    name      = "SWAGGER_API" 
+    value     = var.SWAGGER_API
     }
 setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      ="SWAGGER_ENABLED" 
-    value = true
+    name      = "SWAGGER_ENABLED" 
+    value     = var.SWAGGER_ENABLED
     }
 setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      ="SWAGGER_FILE" 
-    value = "api/swagger.json"
+    name      = "SWAGGER_FILE" 
+    value     = var.SWAGGER_FILE
     }
 setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      ="SWAGGER_PASSWORD" 
-    value = 1234
+    name      = "SWAGGER_PASSWORD" 
+    value     = var.SWAGGER_PASSWORD
     }
 setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      ="SWAGGER_ROUTE" 
-    value = "/swagger"
+    name      = "SWAGGER_ROUTE" 
+    value     = var.SWAGGER_ROUTE
     }
 setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      ="SWAGGER_USERNAME" 
-    value = "admin"
+    name      = "SWAGGER_USERNAME" 
+    value     = var.SWAGGER_USERNAME
     }
 setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      ="TOKEN_SECRET_KEY" 
-    value = "carnegielearning"
+    name      = "TOKEN_SECRET_KEY" 
+    value     = var.TOKEN_SECRET_KEY
     }
 setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      ="TYPEORM_CONNECTION" 
-    value = "postgres"
+    name      = "TYPEORM_CONNECTION" 
+    value     = var.TYPEORM_CONNECTION
     }
 setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      ="TYPEORM_ENTITIES" 
-    value = "src/api/models/**/*.ts"
+    name      = "TYPEORM_ENTITIES" 
+    value     = var.TYPEORM_ENTITIES
     }
 setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      ="TYPEORM_ENTITIES_DIR" 
-    value = "src/api/models"
+    name      = "TYPEORM_ENTITIES_DIR" 
+    value     = var.TYPEORM_ENTITIES_DIR
     }
 setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      ="TYPEORM_FACTORY" 
-    value = "src/database/factories/**/*.factory.ts"
+    name      = "TYPEORM_FACTORY" 
+    value     = var.TYPEORM_FACTORY
     }
 setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      ="TYPEORM_LOGGER" 
-    value = "advanced-console"
+    name      = "TYPEORM_LOGGER" 
+    value     = var.TYPEORM_LOGGER
     }
 setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      ="TYPEORM_LOGGING" 
-    value = "all"
+    name      = "TYPEORM_LOGGING" 
+    value     = var.TYPEORM_LOGGING
     }
 setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      ="TYPEORM_MIGRATIONS" 
-    value = "src/database/migrations/**/*.ts"
+    name      = "TYPEORM_MIGRATIONS" 
+    value     = var.TYPEORM_MIGRATIONS
     }
 setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      ="TYPEORM_MIGRATIONS_DIR" 
-    value = "src/database/migrations"
+    name      = "TYPEORM_MIGRATIONS_DIR" 
+    value     = var.TYPEORM_MIGRATIONS_DIR
     }
 setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      ="TYPEORM_SEED" 
-    value = "src/database/seeds/**/*.seed.ts"
+    name      = "TYPEORM_SEED" 
+    value     = var.TYPEORM_SEED
     }
 setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      ="TYPEORM_SYNCHRONIZE" 
-    value = true
+    name      = "TYPEORM_SYNCHRONIZE" 
+    value     = var.TYPEORM_SYNCHRONIZE
   }
 }

@@ -12,14 +12,14 @@ resource "aws_db_parameter_group" "postgres-parameters" {
 }
 
 # Create DB
-resource "aws_db_instance" "postgres" {
+resource "aws_db_instance" "upgrade-postgres" {
   allocated_storage       = 100 
   engine                  = "postgres"
   engine_version          = "11.5"
   instance_class          = "db.t2.small"
   identifier              = "postgres"
-  name                    = "postgres"
-  username                = "postgres"          
+  name                    = var.RDS_DB_NAME
+  username                = var.RDS_USERNAME          
   password                = var.RDS_PASSWORD 
   db_subnet_group_name    = aws_db_subnet_group.postgres-subnet.name
   parameter_group_name    = aws_db_parameter_group.postgres-parameters.name
