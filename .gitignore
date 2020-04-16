@@ -39,3 +39,16 @@ mydb.sql
 
 .ebextensions
 Dockerrun.aws.json
+
+# Terraform #
+
+terraform/mykey*
+terraform/mykey.pub
+terraform/lambdas/node_modules
+terraform/lambdas.zip
+terraform/.terraform
+terraform/terraform.tfstate.backup
+terraform/terraform.tfstate
+terraform/get-pip.py
+terraform/.terraform/plugins/*
+terraform/.iam.tf.swp
