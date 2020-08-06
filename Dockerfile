@@ -5,7 +5,7 @@ WORKDIR /usr/src/app
 
 # Install app dependencies
 COPY . .
-RUN cd packages/Upgrade && npm install
+RUN cd packages/Upgrade && yarn
 
 RUN ["npm", "run", "build:upgrade"]
 
