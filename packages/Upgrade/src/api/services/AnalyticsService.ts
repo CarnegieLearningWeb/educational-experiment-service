@@ -11,6 +11,7 @@ import {
   DATE_RANGE,
   IExperimentEnrollmentDetailDateStats,
   POST_EXPERIMENT_RULE,
+  ENROLLMENT_CODE,
 } from 'upgrade_types';
 import { AnalyticsRepository } from '../repositories/AnalyticsRepository';
 import { Experiment } from '../models/Experiment';
@@ -324,7 +325,7 @@ export class AnalyticsService {
             }
           }
           const metricToTrackWithUniquifier =
-            metricArray.length > 1 ? `${metricToTrack}_${logs_uniquifier}` : metricToTrack;
+            metricArray.length > 1 ? `${metricToTrack}${METRICS_JOIN_TEXT}${logs_uniquifier}` : metricToTrack;
 
           mergedMonitoredExperimentPoint[key] = mergedMonitoredExperimentPoint[key]
             ? {
@@ -389,12 +390,32 @@ export class AnalyticsService {
         });
 
         toLogDocument.forEach((data) => {
+          let enrollmentCodeNum = 3;
+          switch (data.enrollmentCode) {
+            case ENROLLMENT_CODE.INCLUDED:
+              enrollmentCodeNum = 0;
+              break;
+            case ENROLLMENT_CODE.PRIOR_EXPERIMENT_ENROLLING:
+              enrollmentCodeNum = 1;
+              break;
+            case ENROLLMENT_CODE.STUDENT_EXCLUDED:
+              enrollmentCodeNum = 2;
+              break;
+            case ENROLLMENT_CODE.GROUP_EXCLUDED:
+              enrollmentCodeNum = 3;
+              break;
+            default:
+              enrollmentCodeNum = 0;
+              break;
+          }
           csvRows.push({
+            'Main Experiment Id': experimentId,
             // tslint:disable-next-line: object-literal-key-quotes
             UserId: data.user_id || '',
             // tslint:disable-next-line: object-literal-key-quotes
             markExperimentPointTime: data.createdAt.toISOString(),
             'Enrollment code': data.enrollmentCode,
+            'Enrollment code number': enrollmentCodeNum,
             'Condition Name': data.conditions_conditionCode || 'default',
             // tslint:disable-next-line: object-literal-key-quotes
             GroupId:
