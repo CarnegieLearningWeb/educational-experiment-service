@@ -39,7 +39,7 @@ export interface IEnrollmentConditionAndPartitionDate {
 
 @EntityRepository()
 export class AnalyticsRepository {
-  constructor(private manager: EntityManager) {}
+  constructor(private manager: EntityManager) { }
 
   public async getEnrollments(experimentIds: string[]): Promise<any> {
     if (!experimentIds.length) {
@@ -51,6 +51,7 @@ export class AnalyticsRepository {
     const individualMonitoredExperiment = experimentRepository
       .createQueryBuilder('experiment')
       .select(['"monitoredExperimentPoint"."userId"', 'experiment.id'])
+      .where('"monitoredExperimentPoint"."condition"')
       .innerJoin('experiment.partitions', 'partitions')
       .innerJoin(
         MonitoredExperimentPoint,

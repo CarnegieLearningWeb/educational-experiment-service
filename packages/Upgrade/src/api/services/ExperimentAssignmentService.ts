@@ -84,10 +84,11 @@ export class ExperimentAssignmentService {
     public errorService: ErrorService,
     public settingService: SettingService,
     @Logger(__filename) private log: LoggerInterface
-  ) {}
+  ) { }
   public async markExperimentPoint(
     userId: string,
     experimentPoint: string,
+    condition: string | null,
     experimentName?: string
   ): Promise<MonitoredExperimentPoint> {
     this.log.info(
@@ -136,11 +137,11 @@ export class ExperimentAssignmentService {
         // query group assignment
         (workingGroup &&
           this.groupAssignmentRepository.findExperiment([workingGroup[experiment.group]], [experiment.id])) ||
-          Promise.resolve([]),
+        Promise.resolve([]),
         // query group exclusion
         (workingGroup &&
           this.groupExclusionRepository.findExcluded([workingGroup[experiment.group]], [experiment.id])) ||
-          Promise.resolve([]),
+        Promise.resolve([]),
       ];
       const result = await Promise.all(assignmentPromise);
       const individualAssignments: IndividualAssignment[] = result[0];
@@ -193,6 +194,7 @@ export class ExperimentAssignmentService {
     // adding in monitored experiment point table
     const monitoredDocument = await this.monitoredExperimentPointRepository.saveRawJson({
       user: userDoc,
+      condition,
       experimentId,
       enrollmentCode,
     });

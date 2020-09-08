@@ -13,6 +13,11 @@ export class MonitoredExperimentPoint extends BaseModel {
   public experimentId: string;
 
   @Column({
+    nullable: true,
+  })
+  public condition: string | null;
+
+  @Column({
     type: 'enum',
     enum: ENROLLMENT_CODE,
     nullable: true,
