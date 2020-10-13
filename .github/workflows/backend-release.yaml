@@ -1,4 +1,4 @@
-name: Create and Deploy Release
+name: Build and Deploy Backend Release
 on:
   push:
     branches:
@@ -10,7 +10,7 @@ on:
       - package*.json
 jobs:
   create-and-deploy-release:
-    name: Create and Deploy Release
+    name: Build and Deploy Backend Release
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -30,7 +30,7 @@ jobs:
       - uses: martinbeentjes/npm-get-version-action@v1.1.0
         id: package-version
         with:
-          path: packages/Upgrade/package.json
+          path: packages/Upgrade
       - run: npm install --production
       - run: npm install --production
         working-directory: packages/Upgrade
