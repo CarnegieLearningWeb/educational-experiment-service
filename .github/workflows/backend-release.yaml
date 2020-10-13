@@ -1,0 +1,57 @@
+name: Create and Deploy Release
+on:
+  push:
+    branches:
+      - feature/github-action-releases
+    paths:
+      - .github/**
+      - packages/Upgrade/**
+      - Docker*
+      - package*.json
+jobs:
+  create-and-deploy-release:
+    name: Create and Deploy Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - uses: kaangokdemir/github-version-bumper@0.5.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION_FILE_NAME: packages/Upgrade/package.json
+      - uses: Bullrich/generate-release-changelog@2.0.1
+        id: changelog
+        env:
+          REPO: ${{ github.repository }}
+      - uses: martinbeentjes/npm-get-version-action@v1.1.0
+        id: package-version
+        with:
+          path: packages/Upgrade/package.json
+      - run: npm install --production
+      - run: npm install --production
+        working-directory: packages/Upgrade
+      - uses: montudor/action-zip@v0.1.0
+        with:
+          args: zip -qq -r upgrade-backend-${{ steps.package-version.outputs.current-version}}.zip packages/Upgrade node_modules Dockerfile Dockerrun.aws.json package.json
+      - uses: ncipollo/release-action@v1
+        with:
+          artifacts: upgrade-backend-${{ steps.package-version.outputs.current-version}}.zip
+          tag: upgrade-backend-${{ steps.package-version.outputs.current-version}}
+          name: UpGrade Backend ${{ steps.package-version.outputs.current-version}}
+          body: ${{ steps.changelog.outputs.changelog }}
+          commit: master
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Deploy to QA
+        shell: bash
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          sudo apt-get update && sudo apt-get -y install awscli
+          aws s3 cp uniroster-server-${{ steps.package-version.outputs.current-version}}.zip s3://${{ secrets.S3_BUCKET }}/
+          aws elasticbeanstalk --region ${{ secrets.AWS_REGION }} create-application-version --application-name ${{ secrets.EB_APP_NAME }} --version-label ${{ steps.package-version.outputs.current-version}} --source-bundle S3Bucket=${{ secrets.S3_BUCKET }},S3Key=upgrade-backend-${{ steps.package-version.outputs.current-version}}.zip
+          aws elasticbeanstalk --region ${{ secrets.AWS_REGION }} update-environment --application-name ${{ secrets.EB_APP_NAME }} --environment-name ${{ secrets.EB_ENV_NAME }} --version-label ${{ steps.package-version.outputs.current-version}}
