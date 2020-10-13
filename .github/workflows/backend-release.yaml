@@ -5,6 +5,7 @@ on:
     branches:
       - feature/github-action-releases
     paths:
+      - .github/**
       - packages/Upgrade/**
       - Docker*
       - package*.json
