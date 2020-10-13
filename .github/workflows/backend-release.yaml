@@ -1,10 +1,10 @@
 name: Build and Deploy Backend Release
 on:
+  workflow_dispatch:
   push:
     branches:
       - feature/github-action-releases
     paths:
-      - .github/**
       - packages/Upgrade/**
       - Docker*
       - package*.json
