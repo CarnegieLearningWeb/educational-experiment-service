@@ -32,13 +32,12 @@ jobs:
         id: package-version
         with:
           path: packages/Upgrade
-      - run: npm install --production
-      - run: npm install --production
+      - run: npm install
         working-directory: packages/Upgrade
       - run: npm run build:upgrade
       - uses: montudor/action-zip@v0.1.0
         with:
-          args: zip -qq -r upgrade-backend-${{ steps.package-version.outputs.current-version}}.zip packages/Upgrade node_modules Dockerfile Dockerrun.aws.json package.json tsconfig.json tslint.json
+          args: zip -qq -r upgrade-backend-${{ steps.package-version.outputs.current-version}}.zip packages/Upgrade Dockerfile Dockerrun.aws.json package.json tsconfig.json tslint.json
       - uses: ncipollo/release-action@v1
         with:
           artifacts: upgrade-backend-${{ steps.package-version.outputs.current-version}}.zip
