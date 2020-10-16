@@ -33,7 +33,7 @@ jobs:
         with:
           path: packages/Upgrade
       - run: npm install
-      - run: npm install
+      - run: yarn
         working-directory: packages/Upgrade
       - run: npm run build:upgrade
       - uses: montudor/action-zip@v0.1.0
