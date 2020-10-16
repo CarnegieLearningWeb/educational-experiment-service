@@ -1,17 +1,11 @@
-name: Build and Deploy Backend Release
+name: Create Release And Deploy
 on:
-  workflow_dispatch:
   push:
-    branches:
-      - feature/github-action-releases
-    paths:
-      - .github/**
-      - packages/Upgrade/**
-      - Docker*
-      - package*.json
+    tags:
+      - upgrade-backend-*
 jobs:
-  create-and-deploy-release:
-    name: Build and Deploy Backend Release
+  create-release:
+    name: Create Release
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -20,20 +14,14 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 12.x
-      - uses: phips28/gh-action-bump-version@v8.0.7
-        with:
-          skip-tag: 'true'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PACKAGEJSON_DIR: packages/Upgrade
-      - uses: Bullrich/generate-release-changelog@2.0.1
-        id: changelog
-        env:
-          REPO: ${{ github.repository }}
       - uses: martinbeentjes/npm-get-version-action@v1.1.0
         id: package-version
         with:
           path: packages/Upgrade
+      - uses: Bullrich/generate-release-changelog@2.0.1
+        id: changelog
+        env:
+          REPO: ${{ github.repository }}
       - run: npm install
       - uses: montudor/action-zip@v0.1.0
         with:

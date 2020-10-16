@@ -1,0 +1,22 @@
+name: Bump UpGrade Backend App Version
+on:
+  push:
+    branches:
+      - feature/github-action-releases
+    paths:
+      - .github/**
+      - packages/Upgrade/**
+      - Docker*
+      - package*.json
+jobs:
+  bump-version:
+    name: Bump UpGrade Backend App Version
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: phips28/gh-action-bump-version@v8.0.7
+        with:
+          tag-prefix: upgrade-backend-
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PACKAGEJSON_DIR: packages/Upgrade
