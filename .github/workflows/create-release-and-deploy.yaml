@@ -1,8 +1,8 @@
 name: Create Release And Deploy
 on:
-  push:
+  create:
     tags:
-      - upgrade-backend-*
+      - 'upgrade-backend-*'
 jobs:
   create-release:
     name: Create Release
