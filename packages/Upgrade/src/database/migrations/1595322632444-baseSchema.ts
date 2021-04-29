@@ -6,7 +6,7 @@ export class baseSchema1595322632444 implements MigrationInterface {
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
-      `CREATE TABLE "experiment_condition" ("createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "versionNumber" integer NOT NULL, "id" uuid NOT NULL, "twoCharacterId" character(2) NOT NULL, "name" character varying, "description" character varying, "conditionCode" character varying NOT NULL, "assignmentWeight" integer NOT NULL, "experimentId" uuid, CONSTRAINT "UQ_5b64b4936c5532dc91f224ecdcd" UNIQUE ("twoCharacterId"), CONSTRAINT "PK_5bdfd20bb9ace3415008c296fff" PRIMARY KEY ("id"))`
+      `CREATE TABLE "experiment_condition" ("createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "versionNumber" integer NOT NULL, "id" uuid NOT NULL, "twoCharacterId" character(2) NOT NULL, "name" character varying, "description" character varying, "conditionCode" character varying NOT NULL, "assignmentWeight" double precision NOT NULL, "experimentId" uuid, CONSTRAINT "UQ_5b64b4936c5532dc91f224ecdcd" UNIQUE ("twoCharacterId"), CONSTRAINT "PK_5bdfd20bb9ace3415008c296fff" PRIMARY KEY ("id"))`
     );
     await queryRunner.query(
       `CREATE TABLE "experiment_partition" ("createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "versionNumber" integer NOT NULL, "id" character varying NOT NULL, "twoCharacterId" character(2) NOT NULL, "expPoint" character varying NOT NULL, "expId" character varying, "description" character varying NOT NULL, "experimentId" uuid, CONSTRAINT "UQ_cb098e822278cbd63f7a0e90794" UNIQUE ("twoCharacterId"), CONSTRAINT "PK_8e0a8c9b0820a39beb2d6e6d8e4" PRIMARY KEY ("id"))`
