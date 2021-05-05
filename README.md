@@ -1,3 +1,7 @@
+## This code has been moved to https://github.com/CarnegieLearningWeb/UpGrade.git
+Under the backend/ directory
+
+
 # educational-experiment-service
 ### Service to manage educational experiments, part of the A/B Testing project
 
